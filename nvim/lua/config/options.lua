@@ -1,0 +1,44 @@
+-- Options are automatically loaded before lazy.nvim startup
+-- Default options that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/options.lua
+-- Add any additional options here
+
+-- ~/.config/nvim/lua/config/options.lua
+
+---- General Neovim options (examples, add your own)
+--vim.opt.nu = true
+--vim.opt.relativenumber = true
+--vim.opt.hlsearch = false
+--vim.opt.incsearch = true
+--vim.opt.scrolloff = 8
+--vim.opt.termguicolors = true -- Recommended for modern color schemes
+--vim.opt.mouse = "a" -- Enable mouse support
+--
+---- Tab and indentation settings (examples)
+--vim.opt.tabstop = 2
+--vim.opt.softtabstop = 2
+--vim.opt.shiftwidth = 2
+--vim.opt.expandtab = true
+--vim.opt.smartindent = true
+--
+---- Ensure netrw is allowed to load if you previously disabled it for Neo-tree
+--vim.g.loaded_netrw = nil -- Setting to nil or removing the line is fine
+--vim.g.loaded_netrwPlugin = nil
+--
+---- Netrw specific configurations
+--vim.g.netrw_banner = 0 -- 0 to hide the banner, 1 to show
+--vim.g.netrw_liststyle = 3 -- 3 for tree view, 0 for plain, 1 for wide, 2 for long
+--vim.g.netrw_browse_split = 4 -- 0: reuse netrw win, 1: horiz split, 2: vert split, 3: new tab, 4: prev win
+--vim.g.netrw_altv = 1 -- When splitting, open new window to the right (1) or bottom (0 for netrw_browse_split=2)
+--vim.g.netrw_winsize = 25 -- Percentage size of netrw window when vertically split
+--
+---- *** This is the key setting to show dotfiles (except .git) ***
+---- It tells netrw to ONLY hide the .git directory.
+---- All other files, including dotfiles like .env and untracked files, will be shown.
+--vim.g.netrw_list_hide = [[^\.git/$]] -- Matches only the exact ".git/" directory entry [3]
+--
+---- Optional: If you want netrw to try and detect and cd to the project root on :Explore
+---- vim.g.netrw_localcopydircmd = 'cp -r' -- Example, not directly related to hiding
+---- vim.g.netrw_localmkdir = 'mkdir -p' -- Example
+
+-- This file should NOT return any value (no "return {}" at the end)
+-- THIS FILE SHOULD NOT HAVE A "return { ... }" STATEMENT AT THE END
