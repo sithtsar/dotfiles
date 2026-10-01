@@ -1,0 +1,18 @@
+onboarding = false
+
+[keys]
+split_vertical = "prefix+|"
+
+[ui.toast]
+delivery = "system"
+
+[ui]
+show_agent_labels_on_pane_borders = true
+agent_panel_sort = "spaces"
+status_indicators = "symbols"
+tab_bar_right = [{ type = "text", text = "Herdr:" }, { type = "hostname" }]
+window_title = "Herdr {hostname} | {terminal_title}"
+
+[theme]
+name = "dracula"
+auto_switch = false

@@ -1,0 +1,30 @@
+# Shared Ghostty settings for plato and cronos.
+theme = Ayu
+font-family = "JetBrainsMono Nerd Font Mono"
+font-family = "JetBrainsMono Nerd Font"
+font-size = 14
+font-feature = -liga
+
+window-padding-x = 24
+window-padding-y = 20
+background-opacity = 0.95
+mouse-hide-while-typing = true
+cursor-style = bar
+cursor-style-blink = false
+cursor-color = cell-foreground
+adjust-cell-height = 4
+copy-on-select = true
+confirm-close-surface = false
+
+# The shell supplies user@machine titles, including in Herdr panes.
+shell-integration-features = no-cursor,no-title,ssh-env
+
+keybind = ctrl+shift+h=new_split:left
+keybind = ctrl+shift+l=new_split:right
+keybind = ctrl+shift+j=new_split:down
+keybind = ctrl+shift+k=new_split:up
+keybind = ctrl+shift+t=new_tab
+keybind = ctrl+shift+w=close_surface
+keybind = shift+enter=csi:13;2u
+
+config-file = "~/.config/ghostty/platform.conf"
