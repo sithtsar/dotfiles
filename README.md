@@ -60,6 +60,10 @@ a new SSH key awaiting organization SSO does not prevent setup. Credentials
 are passed only to the child processes and are never saved in this repo.
 Setup skips already installed Pi packages, reports incomplete steps, and can
 be rerun. Downloading packages requires a working internet connection.
+The retired `agentic-map-reduce` plugin is fetched from the Armory revision
+recorded by the Mac's original installation. New installs register this one
+plugin under the local `causalsecurity-legacy` marketplace; its private contents
+remain outside this repo. Existing original installations are preserved.
 
 `dotfiles-sync` pulls changes and reapplies the shared settings and skills.
 Run `dotfiles-ai-setup` again when package/plugin sources change. Start a new

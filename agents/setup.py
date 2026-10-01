@@ -80,6 +80,28 @@ def installed(path):
     return json.loads(path.read_text()) if path.exists() else {}
 
 
+def legacy_marketplace(tool):
+    legacy = sources['legacy_armory']
+    root = HOME_DIR / '.local/share/dotfiles/causalsecurity-legacy'
+    catalog = root / '.claude-plugin/marketplace.json'
+    if not catalog.exists():
+        root.parent.mkdir(parents=True, exist_ok=True)
+        if not root.exists() and not run(['git', 'clone', '--depth', '1', '--no-checkout', sources['marketplaces']['causalsecurity'], str(root)]):
+            return False
+        if not run(['git', '-C', str(root), 'fetch', '--depth', '1', 'origin', legacy['revision']]):
+            return False
+        if not run(['git', '-C', str(root), 'checkout', '--detach', legacy['revision']]):
+            return False
+    data = installed(catalog)
+    data['name'] = 'causalsecurity-legacy'
+    data['plugins'] = [plugin for plugin in data['plugins'] if plugin['name'] == legacy['plugin']]
+    if not data['plugins']:
+        failures.append('Pinned Armory revision did not contain the legacy plugin.')
+        return False
+    catalog.write_text(json.dumps(data, indent=2) + '\n')
+    return run([tool, 'plugin', 'marketplace', 'add', str(root)])
+
+
 if shutil.which('claude'):
     known = installed(HOME_DIR / '.claude/plugins/known_marketplaces.json')
     declared = installed(ROOT / 'claude/settings.json')['extraKnownMarketplaces']
@@ -93,7 +115,12 @@ if shutil.which('claude'):
     existing = installed(HOME_DIR / '.claude/plugins/installed_plugins.json').get('plugins', {})
     for plugin in sources['claude_plugins']:
         if plugin not in existing and plugin.split('@')[-1] not in unavailable:
-            run(['claude', 'plugin', 'install', plugin, '--scope', 'user'])
+            if plugin.split('@')[0] == sources['legacy_armory']['plugin']:
+                replacement = sources['legacy_armory']['plugin'] + '@causalsecurity-legacy'
+                if replacement not in existing and legacy_marketplace('claude'):
+                    run(['claude', 'plugin', 'install', replacement, '--scope', 'user'])
+            else:
+                run(['claude', 'plugin', 'install', plugin, '--scope', 'user'])
 else:
     failures.append('Claude CLI is missing; install Claude Code first.')
 
@@ -109,6 +136,12 @@ if shutil.which('codex'):
     for plugin in sources['codex_plugins']:
         name, marketplace = plugin.split('@')
         cache = HOME_DIR / '.codex/plugins/cache' / marketplace / name
+        if name == sources['legacy_armory']['plugin'] and not cache.exists():
+            plugin = name + '@causalsecurity-legacy'
+            marketplace = 'causalsecurity-legacy'
+            cache = HOME_DIR / '.codex/plugins/cache' / marketplace / name
+            if not cache.exists() and not legacy_marketplace('codex'):
+                continue
         if not config.get('plugins', {}).get(plugin, {}).get('enabled') or not cache.exists():
             run(['codex', 'plugin', 'add', plugin])
 else:

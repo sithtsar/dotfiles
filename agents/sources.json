@@ -50,5 +50,9 @@
     "ponytail@ponytail",
     "fractal@plasma"
   ],
-  "pi_extensions_source": "git@github-personal:sithtsar/pi-extensions.git"
+  "pi_extensions_source": "git@github-personal:sithtsar/pi-extensions.git",
+  "legacy_armory": {
+    "plugin": "agentic-map-reduce",
+    "revision": "e883185cca192cd3bfbae8982191e7de51062bb1"
+  }
 }
