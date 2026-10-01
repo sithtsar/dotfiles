@@ -1,0 +1,7 @@
+- Dont add claude artifacts in git commits
+- I am using bun
+- This is the repo whenever i mention aws strands https://deepwiki.com/strands-agents/sdk-python
+- never use type any in client side code
+- when working with python projects always do source .venv/bin/activate && uv run "<file>.py"
+- Browser automation: ALWAYS use `agent-browser` (Vercel, Rust CLI over CDP). Never use the Playwright MCP tools — `mcp__plugin_playwright_playwright__*` are off-limits, including `browser_navigate`, `browser_evaluate`, `browser_take_screenshot`, and `browser_snapshot`. Reason: Playwright MCP burns ~1.5M tokens/run (full a11y-tree snapshot regenerated after every interaction) vs agent-browser's ~200–400 tokens/page. Commands: `agent-browser open <url>`, `snapshot -i` (interactive refs @e1/@e2), `eval <js>`, `screenshot [path]`, `get text|html|url`, `click/type/fill <sel|@ref>`, `close --all`. Run `agent-browser skills get core --full` when unsure — do not guess flags. Screenshots save under `~/.agent-browser/tmp/screenshots/` regardless of the path argument; read them from there.
+- Stacked PRs: always use the `gh-stack` skill and the `gh stack` CLI (github/gh-stack). It is the default for creating, pushing, rebasing, syncing and submitting stacked PRs. Do not hand-roll `git rebase --onto`, `gt`, or ad-hoc stack scripts. Note `gh stack submit` auto-generates PR title/body, and `gh pr edit` is broken here — patch via `gh api repos/{owner}/{repo}/pulls/{n} -X PATCH -F body=@file` instead.

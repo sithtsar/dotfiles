@@ -1,0 +1,4 @@
+#!/bin/bash
+# SessionStart hook: remind agent to use codebase-memory-mcp tools.
+# Installed by codebase-memory-mcp. Fires on startup/resume/clear/compact.
+printf '%s\n' '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"CRITICAL - Code Discovery Protocol:\n1. ALWAYS use codebase-memory-mcp tools FIRST for ANY code exploration:\n   - search_graph(name_pattern/label/qn_pattern) to find functions/classes/routes\n   - trace_path(function_name, mode=calls|data_flow|cross_service) for call chains\n   - get_code_snippet(qualified_name) for exact symbol source (precise ranges)\n   - query_graph(query) for complex Cypher patterns\n   - get_architecture(aspects) for project structure\n   - search_code(pattern) for text search (graph-augmented grep)\n2. Use Grep/Glob/Read freely for text, configs, non-code files, and always Read a file before editing it.\n3. If a project is not indexed yet, run index_repository FIRST."}}'

@@ -1,0 +1,11 @@
+# Authentication, histories, and generated agent state belong to each machine.
+**/auth.json
+**/.credentials.json
+**/.env
+**/.env.*
+**/history.jsonl
+**/sessions/
+**/node_modules/
+**/__pycache__/
+agents/private/
+agents/*.local.*

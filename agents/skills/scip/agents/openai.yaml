@@ -1,0 +1,15 @@
+interface:
+  display_name: "SCIP"
+  short_description: "Inspect SCIP indexes and schema"
+  default_prompt: "Use $scip to inspect `index.scip`, explain `scip.proto`, parse symbol strings, or design SCIP-based graph ingestion and security analysis."
+
+dependencies:
+  tools:
+    - type: "mcp"
+      value: "deepwiki"
+      description: "Optional DeepWiki MCP for fast repo orientation before verifying against upstream sources."
+      transport: "streamable_http"
+      url: "https://mcp.deepwiki.com/mcp"
+
+policy:
+  allow_implicit_invocation: true

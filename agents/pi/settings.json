@@ -1,0 +1,44 @@
+{
+  "theme": "dark",
+  "defaultProvider": "opencode-go",
+  "defaultModel": "deepseek-v4.1-flash",
+  "defaultThinkingLevel": "max",
+  "tuiMode": "fullscreen",
+  "packages": [
+    "npm:pi-smart-compact",
+    "npm:pi-vimmode",
+    "git:github.com/DietrichGebert/ponytail",
+    "npm:@ff-labs/pi-fff",
+    "npm:@tintinweb/pi-subagents",
+    "npm:@quintinshaw/pi-dynamic-workflows",
+    "npm:picrophone@0.10.3",
+    "npm:pi-goal-x@0.30.5"
+  ],
+  "smartCompact": {
+    "mode": "auto",
+    "profile": "balanced",
+    "summaryModel": null,
+    "segmentationModel": null,
+    "verificationModel": null,
+    "summaryThinkingLevel": "minimal",
+    "segmentationThinkingLevel": "minimal",
+    "autoTrigger": true,
+    "minContextPercent": 60,
+    "backupEnabled": true,
+    "scrubSecrets": true,
+    "scrubPii": false,
+    "requireApproval": false,
+    "maxLlmCalls": 8,
+    "maxLatencyMs": 0,
+    "focusWeighting": true,
+    "zeroCallEnabled": true,
+    "contextGraphEnabled": true,
+    "onlineDamageMonitor": true,
+    "adaptiveDamageFeedback": false,
+    "pinPaths": []
+  },
+  "piVimMode": {
+    "startMode": "normal"
+  },
+  "defaultProjectTrust": "always"
+}

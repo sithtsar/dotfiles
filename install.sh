@@ -28,6 +28,7 @@ link_config "$repo_dir/ghostty/$platform.conf" "$HOME/.config/ghostty/platform.c
 link_config "$repo_dir/ghostty/config" "$config_dir/ghostty/config"
 link_config "$repo_dir/herdr/config.toml" "$config_dir/herdr/config.toml"
 link_config "$repo_dir/sync.sh" "$HOME/.local/bin/dotfiles-sync"
+python3 "$repo_dir/agents/install.py"
 
 echo "Linked Ghostty and Herdr from $repo_dir ($platform)."
 echo "Any replaced files were preserved under $backup_dir."

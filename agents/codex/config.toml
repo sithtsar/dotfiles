@@ -1,0 +1,26 @@
+model = "gpt-6.1-sol"
+model_reasoning_effort = "high"
+approvals_reviewer = "user"
+service_tier = "fast"
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+
+[mcp_servers.deepwiki]
+url = "https://mcp.deepwiki.com/mcp"
+
+[mcp_servers.exa]
+url = "https://mcp.exa.ai/mcp"
+
+[mcp_servers.codebase-memory-mcp]
+enabled = false
+command = "codebase-memory-mcp"
+
+[mcp_servers.aws-mcp]
+enabled = false
+command = "uvx"
+args = ["awslabs.aws-api-mcp-server@latest"]
+
+[mcp_servers.strands]
+enabled = false
+command = "uvx"
+args = ["strands-agents-mcp-server"]
