@@ -106,7 +106,9 @@
     "cipher-kg-pr@causalsecurity": true,
     "sysarch-review@causalsecurity": true,
     "pstack-lite@causalsecurity": true,
-    "agentic-gauntlet@causalsecurity": true
+    "agentic-gauntlet@causalsecurity": true,
+    "fractal@plasma": false,
+    "recursive-harness@causalsecurity": false
   },
   "extraKnownMarketplaces": {
     "claude-code-plugins": {

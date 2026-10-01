@@ -6,11 +6,44 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import tempfile
 
 ROOT = Path(__file__).resolve().parent
 HOME_DIR = Path.home()
 sources = json.loads((ROOT / 'sources.json').read_text())
 failures = []
+
+
+def package_ready(package, home):
+    if package.startswith('npm:'):
+        specification = package[4:]
+        name, separator, version = specification.rpartition('@')
+        if not separator or not name:
+            name, version = specification, ''
+        manifest = home / '.pi/agent/npm/node_modules' / name / 'package.json'
+        if not manifest.exists():
+            return False
+        metadata = json.loads(manifest.read_text())
+        return metadata.get('name') == name and (not version or metadata.get('version') == version)
+    if package.startswith('git:github.com/'):
+        return (home / '.pi/agent/git' / package[4:] / '.git').exists()
+    return False
+
+
+if sys.argv[1:] == ['--check']:
+    with tempfile.TemporaryDirectory() as directory:
+        home = Path(directory)
+        manifest = home / '.pi/agent/npm/node_modules/@scope/example/package.json'
+        manifest.parent.mkdir(parents=True)
+        manifest.write_text('{"name":"@scope/example","version":"1.2.3"}')
+        assert package_ready('npm:@scope/example', home)
+        assert package_ready('npm:@scope/example@1.2.3', home)
+        assert not package_ready('npm:@scope/example@2.0.0', home)
+        assert not package_ready('npm:missing', home)
+    print('PASS: installed package detection respects scoped names and pinned versions.')
+    raise SystemExit(0)
+elif sys.argv[1:]:
+    raise SystemExit('Usage: setup.py [--check]')
 # Public sources use the personal SSH alias. Work HTTPS uses gh's saved OAuth
 # login because a newly added work SSH key may still need organization SSO.
 environment = dict(os.environ)
@@ -74,7 +107,9 @@ if shutil.which('codex'):
         if name not in known:
             run(['codex', 'plugin', 'marketplace', 'add', sources['marketplaces'][name]])
     for plugin in sources['codex_plugins']:
-        if not config.get('plugins', {}).get(plugin, {}).get('enabled'):
+        name, marketplace = plugin.split('@')
+        cache = HOME_DIR / '.codex/plugins/cache' / marketplace / name
+        if not config.get('plugins', {}).get(plugin, {}).get('enabled') or not cache.exists():
             run(['codex', 'plugin', 'add', plugin])
 else:
     failures.append('Codex CLI is missing; install Codex first.')
@@ -94,11 +129,13 @@ if extensions.exists():
 if shutil.which('pi'):
     preferences = json.loads((ROOT / 'pi/settings.json').read_text())
     for package in preferences.get('packages', []):
-        run(['pi', 'install', package])
+        if not package_ready(package, HOME_DIR):
+            run(['pi', 'install', package])
 else:
     failures.append('Pi CLI is missing; install @earendil-works/pi-coding-agent first.')
 
 if failures:
     print('\nIncomplete setup steps:', *failures, sep='\n', file=sys.stderr)
     raise SystemExit(1)
+subprocess.run([sys.executable, str(ROOT / 'install.py')], check=True)
 print('Claude/Codex plugins and Pi packages installed from their original sources.')

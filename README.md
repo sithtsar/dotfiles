@@ -54,8 +54,12 @@ through each agent's native plugin manager, installs Pi's npm/Git packages,
 and checks out the private `sithtsar/pi-extensions` repo for the D2 renderer
 and GitHub stack status extension. Work plugins are fetched directly from
 `causalsecurity/armory`; their contents are not copied into this public repo.
-The `github-work` and `github-personal` SSH aliases must have access to those
-repositories. Setup reports incomplete steps and can be rerun.
+The `github-personal` SSH alias must have access to your extension repository.
+For Armory, setup uses the saved `causalsarthak` GitHub CLI OAuth login so that
+a new SSH key awaiting organization SSO does not prevent setup. Credentials
+are passed only to the child processes and are never saved in this repo.
+Setup skips already installed Pi packages, reports incomplete steps, and can
+be rerun. Downloading packages requires a working internet connection.
 
 `dotfiles-sync` pulls changes and reapplies the shared settings and skills.
 Run `dotfiles-ai-setup` again when package/plugin sources change. Start a new
@@ -84,5 +88,10 @@ Verify installation behavior without touching your home directory:
 
 ```bash
 python3 agents/install.py --check
+python3 agents/setup.py --check
 ./check-install.sh
 ```
+
+Agent configuration references: [Codex skills](https://learn.chatgpt.com/docs/build-skills),
+[Claude user settings](https://code.claude.com/docs/en/settings), and
+[Pi settings](https://github.com/earendil-works/pi/blob/main/packages/coding-agent/docs/settings.md).
