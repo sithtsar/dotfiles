@@ -11,14 +11,17 @@ ROOT = Path(__file__).resolve().parent
 HOME_DIR = Path.home()
 sources = json.loads((ROOT / 'sources.json').read_text())
 failures = []
-# GitHub SSH aliases choose the right account and also work on Cronos's relay.
+# Public sources use the personal SSH alias. Work HTTPS uses gh's saved OAuth
+# login because a newly added work SSH key may still need organization SSO.
 environment = dict(os.environ)
 environment.update({
-    'GIT_CONFIG_COUNT': '2',
+    'GIT_CONFIG_COUNT': '3',
     'GIT_CONFIG_KEY_0': 'url.git@github-personal:.insteadOf',
     'GIT_CONFIG_VALUE_0': 'https://github.com/',
-    'GIT_CONFIG_KEY_1': 'url.git@github-work:causalsecurity/.insteadOf',
+    'GIT_CONFIG_KEY_1': 'url.https://github.com/causalsecurity/.insteadOf',
     'GIT_CONFIG_VALUE_1': 'https://github.com/causalsecurity/',
+    'GIT_CONFIG_KEY_2': 'credential.https://github.com.helper',
+    'GIT_CONFIG_VALUE_2': '!gh auth git-credential',
     'GIT_TERMINAL_PROMPT': '0',
 })
 
@@ -26,7 +29,13 @@ environment.update({
 def run(arguments):
     print('Installing:', ' '.join(arguments), flush=True)
     try:
-        subprocess.run(arguments, env=environment, check=True, timeout=180)
+        selected_environment = dict(environment)
+        if any('causalsecurity' in argument for argument in arguments) and shutil.which('gh'):
+            selected_environment['GH_TOKEN'] = subprocess.check_output(
+                ['gh', 'auth', 'token', '--hostname', 'github.com', '--user', 'causalsarthak'],
+                text=True, env=environment, timeout=30,
+            ).strip()
+        subprocess.run(arguments, env=selected_environment, check=True, timeout=180)
         return True
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as error:
         failures.append(' '.join(arguments))
@@ -40,13 +49,17 @@ def installed(path):
 
 if shutil.which('claude'):
     known = installed(HOME_DIR / '.claude/plugins/known_marketplaces.json')
+    declared = installed(ROOT / 'claude/settings.json')['extraKnownMarketplaces']
     required = {plugin.split('@')[-1] for plugin in sources['claude_plugins']}
+    unavailable = set()
     for name in sorted(required):
         if name not in known:
-            run(['claude', 'plugin', 'marketplace', 'add', sources['marketplaces'][name]])
+            # Preserve the GitHub source kind declared in Claude's settings.
+            if not run(['claude', 'plugin', 'marketplace', 'add', declared[name]['source']['repo']]):
+                unavailable.add(name)
     existing = installed(HOME_DIR / '.claude/plugins/installed_plugins.json').get('plugins', {})
     for plugin in sources['claude_plugins']:
-        if plugin not in existing:
+        if plugin not in existing and plugin.split('@')[-1] not in unavailable:
             run(['claude', 'plugin', 'install', plugin, '--scope', 'user'])
 else:
     failures.append('Claude CLI is missing; install Claude Code first.')
