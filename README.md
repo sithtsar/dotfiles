@@ -38,7 +38,7 @@ committed before syncing, since Git will refuse conflicting local edits.
 ## Claude Code, Codex, and Pi
 
 `agents/` contains portable user preferences, instructions, hooks, output
-styles, and 11 skills. Skills have one source in `agents/skills/`, linked into
+styles, and 12 skills. Skills have one source in `agents/skills/`, linked into
 `~/.agents/skills`, `~/.claude/skills`, and `~/.pi/agent/skills`.
 Claude, Codex, and Pi must already be installed; Pi is
 `@earendil-works/pi-coding-agent`, not the older package with a different scope.
@@ -68,6 +68,14 @@ remain outside this repo. Existing original installations are preserved.
 `dotfiles-sync` pulls changes and reapplies the shared settings and skills.
 Run `dotfiles-ai-setup` again when package/plugin sources change. Start a new
 agent session to load changed skills, hooks, and extensions.
+
+The shared `herdr` skill uses Herdr's official v0.9.3 instructions plus a
+plato/cronos guide for named sessions, SSH attachment, detach, and native
+conversation restore. It is available to Claude, Codex, and Pi on both hosts.
+Agents control panes only from inside Herdr (`HERDR_ENV=1`); the skill does
+not authorize spawning helpers or sending input to other agents by itself.
+Native session restore hooks remain separate: use `herdr integration status`
+and the official integration installers when enabling that feature.
 
 JSON preferences are merged with each machine's existing settings, preserving
 local values such as AWS configuration and Pi's device ID. Codex's shared model
