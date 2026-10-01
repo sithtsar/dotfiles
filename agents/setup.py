@@ -99,6 +99,12 @@ def legacy_marketplace(tool):
         failures.append('Pinned Armory revision did not contain the legacy plugin.')
         return False
     catalog.write_text(json.dumps(data, indent=2) + '\n')
+    codex_catalog = root / '.agents/plugins/marketplace.json'
+    if codex_catalog.exists():
+        data = installed(codex_catalog)
+        data['name'] = 'causalsecurity-legacy'
+        data['plugins'] = [plugin for plugin in data['plugins'] if plugin['name'] == legacy['plugin']]
+        codex_catalog.write_text(json.dumps(data, indent=2) + '\n')
     return run([tool, 'plugin', 'marketplace', 'add', str(root)])
 
 
